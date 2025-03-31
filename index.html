@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="pl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css" />
+    <title>Gra Memory</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DynaPuff:wght@400..700&family=Eater&family=Oswald:wght@200..700&family=Parkinsans:wght@300..800&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <h1>Gra Memory:</h1>
+    <div class="game-container" id="game"></div>
+    <p></p>
+    <script>
+      const images = [
+        "😭",
+        "🙏",
+        "🤡",
+        "👍",
+        "😐",
+        "✌",
+        "😢",
+        "😓",
+        "😭",
+        "🙏",
+        "🤡",
+        "👍",
+        "😐",
+        "✌",
+        "😢",
+        "😓",
+      ];
+      let shuffledImages = images.sort(() => 0.5 - Math.random());
+      let selectedCards = [];
+      let matchedCards = 0;
+
+      const createGameBoard = () => {
+        const gameContainer = document.getElementById("game");
+        gameContainer.innerHTML = "";
+        shuffledImages.forEach((image) => {
+          const card = document.createElement("div");
+          card.classList.add("card");
+
+          const front = document.createElement("div");
+          front.classList.add("front");
+
+          const back = document.createElement("div");
+          back.classList.add("back");
+          back.textContent = image;
+
+          card.appendChild(front);
+          card.appendChild(back);
+          card.addEventListener("click", () => revealCard(card, image));
+
+          gameContainer.appendChild(card);
+        });
+      };
+
+      const revealCard = (card, symbol) => {
+        if (card.classList.contains("flipped") || selectedCards.length >= 2)
+          return;
+
+        card.classList.add("flipped");
+        selectedCards.push({ card, symbol });
+
+        if (selectedCards.length === 2) setTimeout(checkMatch, 500);
+      };
+
+      const checkMatch = () => {
+        const [
+          { card: card1, symbol: symbol1 },
+          { card: card2, symbol: symbol2 },
+        ] = selectedCards;
+        if (symbol1 !== symbol2) {
+          setTimeout(() => {
+            card1.classList.remove("flipped");
+            card2.classList.remove("flipped");
+          }, 300);
+        } else {
+          matchedCards += 2;
+          if (matchedCards === images.length) alert("Gratulacje! Wygrałeś!");
+        }
+        selectedCards = [];
+      };
+
+      createGameBoard();
+    </script>
+  </body>
+</html>
